@@ -10,25 +10,34 @@ def medicine():
         print("\n")
         print("-------------------------------------Adding New Medicine-------------------------------------")
         print("\n")
-        mid = input("Enter Medicine Id : ")
-        name = input("Enter Medicine Name : ")
-        mf = input("Enter Name of Manufacturer : ")
-        dom = input("Enter Date of Manufacture : ")
-        doe = input("Enter Date of Expiry : ")
-        mg = input("Enter the Weight (in mg) : ")
-        content = input("Enter Description : ")
-        price = input("Enter the Price : ")
-        qty = input("Enter the Quantity : ")
-        print("\nSTORING MEDICINE DETAILS.......")
-        time.sleep(2)
-        q = "insert into medicine values(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-        data = (mid, name, mf, dom, doe, mg, content, price, qty)
-        cr = mydb.cursor()
-        cr.execute(q, data)
-        print("\nMedicine Inserted.......!!!!")
-        print("~" * 95)
-        print("\n")
-        mydb.commit()
+        while True:
+            try:
+                mid = input("Enter Medicine Id : ")
+                name = input("Enter Medicine Name : ")
+                mf = input("Enter Name of Manufacturer : ")
+                dom = input("Enter Date of Manufacture : ")
+                doe = input("Enter Date of Expiry : ")
+                mg = input("Enter the Weight (in mg) : ")
+                content = input("Enter Description : ")
+                price = input("Enter the Price : ")
+                qty = input("Enter the Quantity : ")
+                print("\nSTORING MEDICINE DETAILS.......")
+                time.sleep(2)
+                q = "insert into medicine values(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                data = (mid, name, mf, dom, doe, mg, content, price, qty)
+                cr = mydb.cursor()
+                cr.execute(q, data)
+                print("\nMedicine Inserted.......!!!!")
+                print("~" * 95)
+                print("\n")
+                mydb.commit()
+                break
+            except:
+                print("~"*30)
+                print("Please make sure:"
+                      "\n> Value entered is not null."
+                      "\n> Value entered has an incorrect data type.")
+                print("~" * 30)
 
     # function to show a medicine
     def showmedicine():
@@ -109,7 +118,7 @@ def medicine():
                 print("~"*95)
             else:
                 price = int(res[-2])
-                medicine += res[1] + " "
+                medicine += res[1] + " 644"
                 print("Price of Medicine is : ", price)
                 qty = int(input("Enter the Quantity to be Purchased : "))
                 bill = price * qty
@@ -208,6 +217,7 @@ if str(n) == num:
     else:
         print("Connection Error !!!!!")
 else:
-    print("Seems like it's not a human being -__-")
-    print("You Can't Enter The Software. SORRY >_____<")
+    print("Seems like it's not a human being ..")
+    print("You Can't Enter The Software.\n"
+          "SORRY >__<")
 
