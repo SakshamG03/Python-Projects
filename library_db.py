@@ -3,12 +3,12 @@ db1 = None
 def connect():
     global db1
     db1 = mysql.connector.connect(host="localhost",user="root",
-    password="root"
+    password="03april2008"
   )
 
 connect()
 c1 = db1.cursor()
-c1.execute("drop database library")
+#c1.execute("drop database library")
 c1.execute("create database library")
 c1.execute("use library")
 c1.execute("create table users (username varchar(30), passw varchar(30))")

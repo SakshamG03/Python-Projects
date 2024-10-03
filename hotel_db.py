@@ -2,13 +2,11 @@ import mysql.connector
 db1 = None
 def connect():
     global db1
-    db1 = mysql.connector.connect(host="localhost",user="root",
-    password="root"
-  )
+    db1 = mysql.connector.connect(host="localhost",user="root",password="03april2008")
 
 connect()
 c1 = db1.cursor()
-#c1.execute("drop database hotel")
+c1.execute("drop database hotel")
 c1.execute("create database hotel")
 c1.execute("use hotel")
 c1.execute("create table rooms(romm_no integer,type varchar(50),location varchar(30),no_of_guest integer,rent integer, status varchar(20))")

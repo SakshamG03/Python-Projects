@@ -1,5 +1,5 @@
 import mysql.connector as mycon
-con = mycon.connect(host="localhost",user="root",password="root",database="hotel")
+con = mycon.connect(host="localhost",user="root",password="03april2008",database="hotel")
 
 def showmenu():
     while True:
@@ -62,11 +62,17 @@ def showVacantRooms():
 def showOccupiedRooms():
     q = "select room_no, cname, phone from rooms,booking where status='Occupied' and romm_no = room_no"
     cr1 = con.cursor()
-    cr1.execute(q)
-    res = cr1.fetchall()
-    for row in res:
-        print(row)
 
+    while True:
+        try:
+            cr1.execute(q)
+            res = cr1.fetchall()p
+            for row in res:
+                print(row)
+        except:
+            print("No occupied room")
+            break
+    4
 def bookRoom():
     print("-" * 40)
     print("       BOOKING A ROOM ")

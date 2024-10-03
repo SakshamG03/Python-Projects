@@ -8,7 +8,7 @@ def medicine():
     # function to add a medicine
     def addmedicine():
         print("\n")
-        print("😇🙃" * 15)
+        print("-------------------------------------Adding New Medicine-------------------------------------")
         print("\n")
         mid = input("Enter Medicine Id : ")
         name = input("Enter Medicine Name : ")
@@ -16,7 +16,7 @@ def medicine():
         dom = input("Enter Date of Manufacture : ")
         doe = input("Enter Date of Expiry : ")
         mg = input("Enter the Weight (in mg) : ")
-        content = input("Enter Content : ")
+        content = input("Enter Description : ")
         price = input("Enter the Price : ")
         qty = input("Enter the Quantity : ")
         print("\nSTORING MEDICINE DETAILS.......")
@@ -26,13 +26,13 @@ def medicine():
         cr = mydb.cursor()
         cr.execute(q, data)
         print("\nMedicine Inserted.......!!!!")
-        print("👍😎" * 15)
+        print("~" * 95)
         print("\n")
         mydb.commit()
 
     # function to show a medicine
     def showmedicine():
-        print("🤩😄" * 15)
+        print("------------------------------------Showing New Medicine-------------------------------------")
         q = "select * from medicine"
         cr = mydb.cursor()
         cr.execute(q)
@@ -55,9 +55,8 @@ def medicine():
         cr = mydb.cursor()
         cr.execute(q, d)
         print("\n")
-        print("😎😄" * 12)
         print("Medicine Restocked......!!")
-        print("😎😄" * 12)
+        print("~"*95)
         print("\n")
         mydb.commit()
 
@@ -70,10 +69,9 @@ def medicine():
         k = cr.fetchone()
         if k == None:
             print("\nNo Medicine Available With This ID\n")
-            print("😣😣" * 15)
+            print("~"*95)
         else:
             print("\nMedicine Found......!!")
-            print("😀😀" * 15)
             print("\n")
             print("-" * 95)
             print("Id\tName\t\tDate_of_Expiry\t\tPrice\t\tQty")
@@ -89,7 +87,7 @@ def medicine():
         cr = mydb.cursor()
         cr.execute(q)
         print("\nMedicine Deleted......!!\n")
-        print("😒😒" * 15)
+        print("~"*95)
         print("\n\n")
         mydb.commit()
 
@@ -108,7 +106,7 @@ def medicine():
             res = cr.fetchone()
             if res == None:
                 print("\nNo Medicine Available With This ID\n")
-                print("😣😣" * 15)
+                print("~"*95)
             else:
                 price = int(res[-2])
                 medicine += res[1] + " "
@@ -128,7 +126,7 @@ def medicine():
         mydb.commit()
         print("    Bill Generated !!!    \n\n")
     def showbills():
-        print("🤩😄" * 15)
+        print("~" * 95)
         q = "select * from bill"
         cr = mydb.cursor()
         cr.execute(q)
@@ -143,9 +141,9 @@ def medicine():
         print("\n")
 
     while True:
-        print("😇🙃" * 15)
+        print("*"*45)
         print("\t\t\tAL Medical Store")
-        print("😇🙃" * 15)
+        print("*"*45)
         print("\n")
         print("Press 1 - Add New Medicine")
         print("Press 2 - Restock a Medicine")
@@ -185,7 +183,7 @@ def medicine():
 
 
 # setting conection
-mydb = sql.connect(host="localhost", user="root", password="root", database="medicine_shop")
+mydb = sql.connect(host="localhost", user="root", password="03april2008", database="medicine_shop")
 
 # login screen
 a = rd.randint(1, 9)
@@ -200,15 +198,13 @@ n = int(input("Enter The Number Shown Above : "))
 if str(n) == num:
     print("Yayyyiieee...You've Successfully Entered the Market..!!")
     if mydb.is_connected():
-        print("🥳🥳🎁" * 10)
-        print("\n")
+        print("*" * 45)
         print("\t\t\tCHEMIST SHOP MANAGEMENT")
-        print("\n")
-        print("🥳🥳🎁" * 10)
+        print("*" * 45)
         medicine()
-        print("🙂🙃" * 15)
+        print("*"* 30)
         print("\t\tThanks for Visiting....!!!")
-        print("🙂🙃" * 15)
+        print("*" * 30)
     else:
         print("Connection Error !!!!!")
 else:

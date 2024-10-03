@@ -3,7 +3,7 @@ db1 = None
 def connect():
     global db1
     db1 = mysql.connector.connect(host="localhost",user="root",
-    password="root",
+    password="03april2008",
     database = "library"
   )
   
