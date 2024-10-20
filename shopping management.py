@@ -1,6 +1,5 @@
 import os
 import mysql.connector
-
 # Function to connect to MySQL database
 
 def connect_db():
@@ -122,7 +121,8 @@ def admin_menu(cursor, connection):
         center_print("2. Update Product")
         center_print("3. Delete Product")
         center_print("4. View Products")
-        center_print("5. Exit")
+        center_print("5. Manage Admins")
+        center_print("6. Logout")
 
         choice = input("\nEnter your choice: ")
 
@@ -135,6 +135,8 @@ def admin_menu(cursor, connection):
         elif choice == "4":
             view_products(cursor)
         elif choice == "5":
+            manage_admins(cursor,connection)
+        elif choice == "6":
             break
         else:
             center_print("Invalid choice. Please try again.")
@@ -279,25 +281,89 @@ def customer_menu(cursor):
 
 #Function for welcome page and login
 
-def admin_login():
-    # Admin login credentials
-    admin_username = "admin"
-    admin_password = "admin123"
+def admin_login(cursor):
 
     clear_screen()
     center_print("=== Admin Login ===")
 
-    username = input("Enter username: ")
-    password = input("Enter password: ")
+    username = input("Enter admin username: ")
+    password = input("Enter admin password: ")
 
-    if username == admin_username and password == admin_password:
+    cursor.execute("SELECT * FROM admin_users WHERE username = %s AND password = %s", (username, password))
+    admin = cursor.fetchone()
+
+    if admin:
         center_print("Login successful!")
         input("Press Enter to continue...")
         return True
     else:
         center_print("Invalid username or password.")
-        input("Press Enter to return to the main menu...")
+        input("Press Enter to continue...")
         return False
+
+def manage_admins(cursor, db):
+    while True:
+        clear_screen()
+        center_print("=== Manage Admins ===")
+        center_print("1. Add Admin")
+        center_print("2. Change Password")
+        center_print("3. Delete Admin")
+        center_print("4. Return to Admin Menu")
+
+        choice = input("Enter your choice: ").strip()
+
+        if choice == '1':
+            add_admin(cursor, db)
+        elif choice == '2':
+            change_admin_password(cursor, db)
+        elif choice == '3':
+            delete_admin(cursor, db)
+        elif choice == '4':
+            break
+        else:
+            center_print("Invalid choice. Please try again.")
+            input()
+
+def delete_admin(cursor, db):
+    print()
+    username = input("Enter the admin username to delete: ")
+
+    cursor.execute("DELETE FROM admin_users WHERE username = %s", (username,))
+    db.commit()
+    center_print("Admin user '" + username + "' deleted successfully.")
+    input("Press enter to continue...")
+
+def change_admin_password(cursor, db):
+    print()
+    username = input("Enter admin username: ")
+    old_password = input("Enter current password: ")
+
+    # Check if the admin exists
+    cursor.execute("SELECT * FROM admin_users WHERE username = %s AND password = %s", (username, old_password))
+    admin = cursor.fetchone()
+
+    if admin:
+        new_password = input("Enter new password: ")
+
+        # Update the password in the database
+        cursor.execute("UPDATE admin_users SET password = %s WHERE username = %s", (new_password, username))
+        db.commit()
+        center_print("Password changed successfully.")
+        input("Press enter to continue...")
+    else:
+        center_print("Invalid username or current password.")
+        input("Press enter to continue...")
+
+def add_admin(cursor, db):
+    print()
+    username = input("Enter new admin username: ")
+    password = input("Enter new admin password: ")
+
+    # Add admin to the database (plain text password)
+    cursor.execute("INSERT INTO admin_users (username, password) VALUES (%s, %s)", (username, password))
+    db.commit()
+    center_print("Admin user '" + username + "' added successfully.")
+    input("Press enter to continue...")
 
 def welcome_page():
     clear_screen()
@@ -321,7 +387,7 @@ def main():
         choice = welcome_page()  # Show welcome page
 
         if choice == "1":  # Admin Login
-            if admin_login():
+            if admin_login(cursor):
                 admin_menu(cursor, connection)  # If login is successful, enter Admin Menu
         elif choice == "2":  # Customer Page
             customer_menu(cursor)  # Go to customer menu

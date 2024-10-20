@@ -5,8 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="91d5c373-cfd5-4d5f-84eb-0fab474c536f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/shopping management.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Admin.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Shopping_db.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shopping management.py" beforeDir="false" afterPath="$PROJECT_DIR$/shopping management.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,25 +48,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.CONTACT BOOK.executor": "Run",
-    "Python.abc.executor": "Run",
-    "Python.carrent.executor": "Run",
-    "Python.chemist.executor": "Run",
-    "Python.electricity_db.executor": "Run",
-    "Python.electricity_main.executor": "Run",
-    "Python.hotel_db.executor": "Run",
-    "Python.hotel_mgt_code.executor": "Run",
-    "Python.library_db.executor": "Run",
-    "Python.library_main.executor": "Run",
-    "Python.medicinedata.executor": "Run",
-    "Python.shopping management.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "D:/Dell/Desktop/CS Project/Python-Projects"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.CONTACT BOOK.executor&quot;: &quot;Run&quot;,
+    &quot;Python.abc.executor&quot;: &quot;Run&quot;,
+    &quot;Python.carrent.executor&quot;: &quot;Run&quot;,
+    &quot;Python.chemist.executor&quot;: &quot;Run&quot;,
+    &quot;Python.electricity_db.executor&quot;: &quot;Run&quot;,
+    &quot;Python.electricity_main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.hotel_db.executor&quot;: &quot;Run&quot;,
+    &quot;Python.hotel_mgt_code.executor&quot;: &quot;Run&quot;,
+    &quot;Python.library_db.executor&quot;: &quot;Run&quot;,
+    &quot;Python.library_main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.medicinedata.executor&quot;: &quot;Run&quot;,
+    &quot;Python.shopping management.executor&quot;: &quot;Debug&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Dell/Desktop/CS Project/Python-Projects&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="carrent" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <option name="ENV_FILES" value="" />
