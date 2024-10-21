@@ -1,5 +1,6 @@
 import os
 import mysql.connector
+import time
 # Function to connect to MySQL database
 
 def connect_db():
@@ -53,7 +54,8 @@ def update_product(cursor, connection):
         center_print("Product not found.")
         return
 
-    center_print("Current details: Name = " + product[1] + ", Category = " + product[2] +", Price = " + str(product[3]) + ", Stock = " + str(product[4]))
+    center_print("Current details:")
+    center_print("Name = " + product[1] + ", Category = " + product[2] +", Price = " + str(product[3]) + ", Stock = " + str(product[4]))
 
     # Input new values (skip if empty)
     name = input("Enter new name (press enter to skip): ") or product[1]
@@ -113,6 +115,41 @@ def view_products(cursor):
     input("\nPress Enter to continue...")
 
 
+def view_orders(cursor):
+    print()
+    center_print("=== View Orders ===")
+    print()
+    # Retrieve all orders
+    cursor.execute("SELECT * FROM orders")
+    orders = cursor.fetchall()
+
+    if not orders:
+        center_print("No orders found.")
+    else:
+        print("Order ID".ljust(10) + "Customer Name".ljust(20) + "Total Price".ljust(15) + "Order Date")
+        print("-" * 60)
+        for order in orders:
+            print(str(order[0]).ljust(10) + order[1].ljust(20) + str(order[2]).ljust(15) + str(order[3]))
+
+        # Optionally, view details of each order
+        order_id = input("\nEnter order ID to view details (or press 0 to go back): ").strip()
+        if order_id != '0':
+            cursor.execute("SELECT * FROM order_items WHERE order_id = %s", (order_id,))
+            items = cursor.fetchall()
+            if items:
+                print("\nItems in Order #" + order_id)
+                print()
+                print("Product Name".ljust(20) + "Quantity".ljust(10) + "Price")
+                print("-" * 40)
+                for item in items:
+                    print(item[2].ljust(20) + str(item[3]).ljust(10) + str(item[4]))
+                print("-"* 40)
+            else:
+                center_print("No items found for this order.")
+
+    input("Press Enter to return to the menu...")
+
+
 def admin_menu(cursor, connection):
     while True:
         clear_screen()
@@ -121,8 +158,9 @@ def admin_menu(cursor, connection):
         center_print("2. Update Product")
         center_print("3. Delete Product")
         center_print("4. View Products")
-        center_print("5. Manage Admins")
-        center_print("6. Logout")
+        center_print("5. View Orders")
+        center_print("6. Manage Admins")
+        center_print("7. Logout")
 
         choice = input("\nEnter your choice: ")
 
@@ -135,11 +173,14 @@ def admin_menu(cursor, connection):
         elif choice == "4":
             view_products(cursor)
         elif choice == "5":
-            manage_admins(cursor,connection)
+            view_orders(cursor)
         elif choice == "6":
+            manage_admins(cursor, connection)
+        elif choice == "7":
             break
         else:
             center_print("Invalid choice. Please try again.")
+            input()
 
 
 
@@ -192,9 +233,15 @@ def add_to_cart(cursor):
             input("Press Enter to continue...")
             continue  # Ask for product ID again
 
-        # Add product to cart
-        cart.append({"product_id": product_id, "name": product[1], "price": product[3], "quantity": quantity})
-        center_print("Added '" + str(quantity) + "' of '" + product[1] + "' to cart.")
+        for item in cart:
+            if item['product_id'] == product_id:
+                item['quantity'] += quantity
+                center_print("Updated quantity of '" + item['name'] + "' to " + str(item['quantity']) + ".")
+                break
+        else:
+            # Add product to cart
+            cart.append({"product_id": product_id, "name": product[1], "price": product[3], "quantity": quantity})
+            center_print("Added '" + str(quantity) + "' of '" + product[1] + "' to cart.")
 
         ask = input("Do you want to add more items? (yes/no): ").strip().lower()
         if ask != 'yes':
@@ -204,7 +251,7 @@ def add_to_cart(cursor):
     input("Press Enter to return to the menu...")
 
 
-def view_cart():
+def view_cart(cursor):
     print()
     center_print("=== Your Shopping Cart ===")
 
@@ -228,7 +275,64 @@ def view_cart():
 
     input("\nPress Enter to continue...")
 
-def checkout():
+
+def update_cart(cursor):
+    print()
+    center_print("=== Update Cart ===")
+
+    if not cart:
+        center_print("Your cart is empty.")
+        input("Press Enter to continue")
+        return
+
+    # Display the cart items
+    print("Current items in your cart:")
+
+    # Display the cart items as a table
+    print("ID".ljust(5) + "Product Name".ljust(20) + "Quantity".ljust(10) + "Price")
+    print("-" * 45)
+    for i, item in enumerate(cart, 1):
+        print(str(i).ljust(5) + item['name'].ljust(20) + str(item['quantity']).ljust(10) + str(item['price']))
+
+    # Ask which item to update
+    item_number = int(input("Enter the item number to update (or 0 to cancel): ").strip())
+
+    if item_number == 0:
+        return
+
+    if 1 <= item_number <= len(cart):
+        selected_item = cart[item_number - 1]
+
+        center_print("Selected: " + selected_item['name'] + ", Quantity: " + str(selected_item['quantity']))
+        print("1. Update Quantity")
+        print("2. Remove Item")
+
+        action_choice = input("Enter your choice: ").strip()
+
+        if action_choice == '1':
+            new_quantity = int(
+                input("Enter new quantity for '" + selected_item['name'] + "' (or 0 to remove): ").strip())
+            if new_quantity == 0:
+                cart.remove(selected_item)
+                center_print("'" + selected_item['name'] + "' removed from the cart.")
+            else:
+                selected_item['quantity'] = new_quantity
+                center_print("Quantity for '" + selected_item['name'] + "' updated to " + str(new_quantity) + ".")
+
+        elif action_choice == '2':
+            cart.remove(selected_item)
+            center_print("'" + selected_item['name'] + "' removed from the cart.")
+
+        else:
+            center_print("Invalid choice. Returning to the menu.")
+    else:
+        center_print("Invalid item number.")
+
+    input("Press Enter to return to the menu...")
+
+
+
+def checkout(cursor,connection):
     print()
     center_print("=== Checkout ===")
 
@@ -237,12 +341,25 @@ def checkout():
         input("Press Enter to continue...")
         return
 
-    # Display the cart items first
-    view_cart()  # Display the entire cart before proceeding to checkout
+    view_cart(cursor)  # Display the entire cart before proceeding to checkout
+
+    customer_name = input("Enter your name: ").strip()
 
     total_price = sum(item["price"] * item["quantity"] for item in cart)
 
-    center_print("Total Price: " + str(total_price) + " Rs")
+    cursor.execute("INSERT INTO orders (customer_name, total_price)VALUES (%s, %s)", (customer_name, total_price))
+
+    connection.commit()
+
+    order_id = cursor.lastrowid
+
+    # Insert each item into 'order_items' table
+    for item in cart:
+        cursor.execute("INSERT INTO order_items (order_id, product_name, quantity, price)VALUES (%s, %s, %s, %s)", (order_id, item['name'], item['quantity'], item['price']))
+
+    connection.commit()
+
+    center_print("Your Total: " + str(total_price) + " Rs")
     confirm = input("Confirm checkout? (yes/no): ").strip().lower()
 
     if confirm == "yes":
@@ -253,15 +370,16 @@ def checkout():
 
     input("Press Enter to return to the menu...")
 
-def customer_menu(cursor):
+def customer_menu(cursor,connection):
     while True:
         clear_screen()
         center_print("--- Customer Menu ---")
         center_print("1. View Products")
         center_print("2. Add to Cart")
         center_print("3. View Cart")
-        center_print("4. Checkout")
-        center_print("5. Exit")
+        center_print("4. Update Cart")
+        center_print("5. Checkout")
+        center_print("6. Exit")
 
         choice = input("\nEnter your choice: ")
 
@@ -270,13 +388,16 @@ def customer_menu(cursor):
         elif choice == "2":
             add_to_cart(cursor)
         elif choice == "3":
-            view_cart()
+            view_cart(cursor)
         elif choice == "4":
-            checkout()
+            update_cart(cursor)
         elif choice == "5":
+            checkout(cursor,connection)
+        elif choice =="6":
             break
         else:
             center_print("Invalid choice. Please try again.")
+            input()
 
 
 #Function for welcome page and login
@@ -367,10 +488,17 @@ def add_admin(cursor, db):
 
 def welcome_page():
     clear_screen()
-    center_print("===================================")
-    center_print(" Welcome to Shopping Management System ")
-    center_print("===================================")
+    center_print("=" * 55)
+
+    center_print(" WELCOME TO THE SHOPPING MANAGEMENT SYSTEM ")
+    center_print("-" * 55)  # Separator line
+    center_print(" Created by: Saksham Goyal")
+    center_print(" Class: COMPUTER SCIENCE XII PCM ")
+    center_print("=" * 55)
+
+    time.sleep(1)
     center_print("\n")
+    center_print("Please select an option:")
     center_print("1. Admin Login")
     center_print("2. Customer Page")
     center_print("3. Exit")
@@ -390,8 +518,10 @@ def main():
             if admin_login(cursor):
                 admin_menu(cursor, connection)  # If login is successful, enter Admin Menu
         elif choice == "2":  # Customer Page
-            customer_menu(cursor)  # Go to customer menu
+            customer_menu(cursor,connection)  # Go to customer menu
         elif choice == "3":  # Exit
+            center_print("Thank you for using the system!")
+            time.sleep(5)
             break
         else:
             center_print("Invalid choice. Please try again.")
